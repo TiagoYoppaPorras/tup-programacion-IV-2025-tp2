@@ -1,0 +1,26 @@
+@url = http://localhost:3000/materias
+
+### Listar todas las materias
+GET {{url}}
+
+### Buscar materia por ID
+GET {{url}}/1
+
+### Crear materia
+POST {{url}}
+Content-Type: application/json
+
+{
+  "nombre": "estadistica"
+}
+
+### Actualizar materia
+PUT {{url}}/1
+Content-Type: application/json
+
+{
+  "nombre": "progamacion 4"
+}
+
+### Eliminar materia
+DELETE {{url}}/1
