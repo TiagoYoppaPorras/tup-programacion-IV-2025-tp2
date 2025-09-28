@@ -58,14 +58,26 @@ router.get("/:id", validarID, validar, async (req, res) => {
 router.post("/", validarAlumno, validar, async (req, res) => {
   const { nombre, materia_id, nota1, nota2, nota3 } = req.body;
 
+  // Verificar que la materia exista
+  const [materias] = await db.execute(
+    "SELECT id FROM materias WHERE id = ?",
+    [materia_id]
+  );
+  if (materias.length === 0) {
+    return res
+      .status(400)
+      .json({ success: false, message: "La materia no existe" });
+  }
 
-  // Verificar duplicados
+  // Verificar que no se duplique
   const [rows] = await db.execute(
     "SELECT id FROM alumnos WHERE nombre = ? AND materia_id = ?",
     [nombre, materia_id]
   );
   if (rows.length > 0) {
-    return res.status(400).json({ success: false, message: "El alumno ya existe en esa materia" });
+    return res
+      .status(400)
+      .json({ success: false, message: "El alumno ya existe en esa materia" });
   }
 
   const [result] = await db.execute(
@@ -85,7 +97,16 @@ router.put("/:id", validarID, validarAlumno, validar, async (req, res) => {
   const id = Number(req.params.id);
   const { nombre, materia_id, nota1, nota2, nota3 } = req.body;
 
-
+  // Verificar que la materia exista
+  const [materias] = await db.execute(
+    "SELECT id FROM materias WHERE id = ?",
+    [materia_id]
+  );
+  if (materias.length === 0) {
+    return res
+      .status(400)
+      .json({ success: false, message: "La materia no existe" });
+  }
 
   // Verificar duplicados excepto el mismo ID
   const [rows] = await db.execute(
@@ -93,7 +114,9 @@ router.put("/:id", validarID, validarAlumno, validar, async (req, res) => {
     [nombre, materia_id, id]
   );
   if (rows.length > 0) {
-    return res.status(400).json({ success: false, message: "El alumno ya existe en esa materia" });
+    return res
+      .status(400)
+      .json({ success: false, message: "El alumno ya existe en esa materia" });
   }
 
   await db.execute(
@@ -110,12 +133,39 @@ router.put("/:id", validarID, validarAlumno, validar, async (req, res) => {
 });
 
 
-
 // Eliminar alumno
 router.delete("/:id", validarID, validar, async (req, res) => {
   const id = Number(req.params.id);
+
+  //  Verificar que el alumno exista
+  const [alumnos] = await db.execute(
+    "SELECT * FROM alumnos WHERE id = ?",
+    [id]
+  );
+  if (alumnos.length === 0) {
+    return res
+      .status(404)
+      .json({ success: false, message: "El alumno no existe" });
+  }
+
+  //  Verificar que la materia asociada exista
+  const materia_id = alumnos[0].materia_id;
+  const [materias] = await db.execute(
+    "SELECT id FROM materias WHERE id = ?",
+    [materia_id]
+  );
+  if (materias.length === 0) {
+    return res.status(400).json({
+      success: false,
+      message: "La materia asociada al alumno no existe",
+    });
+  }
+
+  // Eliminar alumno
   await db.execute("DELETE FROM alumnos WHERE id = ?", [id]);
-  res.json({ success: true, message: "El alumno fue eliminado correctamente" });
+
+  res.json({ success: true, message: "Alumno eliminado correctamente" });
 });
+
 
 export default router;

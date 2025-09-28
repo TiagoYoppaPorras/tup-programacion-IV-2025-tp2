@@ -5,7 +5,7 @@ GET {{url}}/rectangulos
 Content-Type: application/json
 
 ### Obtener un rectángulo por ID
-GET {{url}}/rectangulos/1
+GET {{url}}/rectangulos/14
 Content-Type: application/json
 
 ### Crear un nuevo rectángulo
@@ -18,14 +18,14 @@ Content-Type: application/json
 }
 
 ### Actualizar un rectángulo existente
-PUT {{url}}/rectangulos/6
+PUT {{url}}/rectangulos/3
 Content-Type: application/json
 
 {
-  "base": 8,
-  "altura": 12
+  "base": 100,
+  "altura": 50
 }
 
 ### Borrar un rectángulo
-DELETE {{url}}/rectangulos/6
+DELETE {{url}}/rectangulos/3
 Content-Type: application/json

@@ -55,7 +55,7 @@ router.put("/:id", validacionID, validarMateria, validar, async (req, res) => {
     return res.status(404).json({ success: false, message: "Materia no encontrada" });
   }
 
-  // Verificar duplicado
+  // Verificar que no se duplique
   const [rowsNombre] = await db.execute(
     "SELECT id FROM materias WHERE nombre = ? AND id != ?",
     [nombre, id]
@@ -72,16 +72,26 @@ router.put("/:id", validacionID, validarMateria, validar, async (req, res) => {
 router.delete("/:id", validacionID, validar, async (req, res) => {
   const id = Number(req.params.id);
 
-  // Verificar existencia
-  const [rows] = await db.execute("SELECT * FROM materias WHERE id = ?", [id]);
-  if (rows.length === 0) {
-    return res.status(404).json({ success: false, message: "Materia no encontrada" });
+  // Verificar si existe
+  const [materia] = await db.execute("SELECT * FROM materias WHERE id = ?", [id]);
+  if (materia.length === 0) {
+    return res.status(404).json({ success: false, message: "La materia no existe" });
   }
 
-  // Eliminar materia
+  // Verificar si tiene alumnos asociados
+  const [alumnos] = await db.execute("SELECT id FROM alumnos WHERE materia_id = ?", [id]);
+  if (alumnos.length > 0) {
+    return res.status(400).json({
+      success: false,
+      message: "No se puede eliminar la materia porque tiene alumnos asociados",
+    });
+  }
+
+  // Eliminar si no tiene alumnos
   await db.execute("DELETE FROM materias WHERE id = ?", [id]);
-  res.json({ success: true, message: "La materia fue eliminada correctamente" });
+  res.json({ success: true, message: "Materia eliminada correctamente" });
 });
+
 
 
 export default router;

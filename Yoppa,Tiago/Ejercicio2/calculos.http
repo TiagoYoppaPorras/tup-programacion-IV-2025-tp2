@@ -4,14 +4,14 @@
 GET {{url}}/tareas
 
 ### Buscar tarea por ID
-GET {{url}}/tareas/2
+GET {{url}}/tareas/
 
 ### Crear tarea
 POST {{url}}/tareas
 Content-Type: application/json
 
 {
-  "nombre" : "planchar",
+  "nombre" : "leer",
   "completada" : false
 }
 
@@ -19,13 +19,13 @@ Content-Type: application/json
 GET {{url}}/tareas?completada=true
 
 ### Actualizar tarea por ID
-PUT {{url}}/tareas/2
+PUT {{url}}/tareas/1
 Content-Type: application/json
 
 {
-  "nombre": "planchar ropa",
-  "completada": true
+  "nombre": "cocinar",
+  "completada": false
 }
 
 ### Eliminar tarea por ID
-DELETE {{url}}/tareas/2
+DELETE {{url}}/tareas/6

@@ -11,7 +11,7 @@ POST {{url}}
 Content-Type: application/json
 
 {
-  "nombre": "estadistica"
+  "nombre": "FRANCES"
 }
 
 ### Actualizar materia
@@ -19,7 +19,7 @@ PUT {{url}}/1
 Content-Type: application/json
 
 {
-  "nombre": "progamacion 4"
+  "nombre": "laboratorio 4"
 }
 
 ### Eliminar materia

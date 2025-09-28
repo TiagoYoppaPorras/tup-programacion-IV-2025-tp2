@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
   res.send("Servidor funcionando");
 });
 
-// Prefijo correcto para el router
+
 app.use("/", rectangulo);
 
 app.listen(port, () => {
